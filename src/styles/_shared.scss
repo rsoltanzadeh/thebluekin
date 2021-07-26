@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
+
+$dark-swamp: #001111;
+$red: #8D0000;
+$teal: #008A8A;
+$beige: #F7E8A9;
+$main-font: "Syne Mono";
+$secondary-font: "EB Garamond";
+
+$primary-dark: #023047;
+$primary-medium: #219EBC;
+$primary-light: #8ECAE6;
+$primary-cta-light: #FFB703;
+$primary-cta-medium: #FB8500;
+$secondary-dark: #331E36;
+$secondary-medium: #A7754D;
+$secondary-light: #EEE3AB;
+$secondary-cta-light: #BBCDE5;
+$secondary-cta-medium: #639FAB;
+
+$layout-breakpoint: 1300px;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
