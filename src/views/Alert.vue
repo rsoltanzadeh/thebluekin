@@ -28,7 +28,7 @@
 </script>
 
 <style scoped lang="scss">
- @import "./styles/_shared.scss";
+/* @import "./styles/_shared.scss"; */
  
  div.alert-wrapper {
      position: fixed;

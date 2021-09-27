@@ -19,7 +19,8 @@
     </p>
 
     <div class="router-wrapper">
-      <router-link to="/password-guide">Register</router-link>
+      <router-link to="/password-guide">Sign up</router-link>
+      <router-link to="/login">Log in</router-link>
     </div>
   </div>
 </template>
@@ -29,8 +30,9 @@
 </script>
 
 <style scoped lang="scss">
+ /*
  @import "./styles/_shared.scss";
-
+*/
  ::selection {
      background-color: $primary-light;
      color: $primary-dark;
@@ -66,6 +68,12 @@
      flex-direction: row;
      justify-content: center;
      align-items: center;
+
+     a {
+         margin-left: 20px;
+         margin-right: 20px;
+         white-space: nowrap;
+     }
  }
  
  a {

@@ -47,8 +47,9 @@
 </script>
 
 <style scoped lang="scss">
+ /*
  @import "./styles/_shared.scss"; 
-
+*/
 
  div.wrapper {
      font-family: $secondary-font;
