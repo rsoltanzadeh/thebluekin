@@ -63,7 +63,6 @@ function insert_failed_login($mysqli, $username) {
     if($statement->bind_param("si", $username, $failed) == false) {
 	echo("Something went wrong.");
     }
-    
-    echo($statement->execute())
+    echo($statement->execute());
 }
 ?>
