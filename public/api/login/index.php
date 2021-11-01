@@ -50,9 +50,10 @@ if($result->num_rows > 1) {
 } else {
     $statement = $mysqli->prepare("INSERT INTO login (username,success) VALUES (?,?)");
     $success = 1;
-    $statement->bind_param("si", $username, $success);
-    $statement->execute();
-    echo("success");
+    if($statement->bind_param("si", $username, $success) == false) {
+	echo("Something else went wrong.");
+    }
+    echo($statement->execute());
     exit;
 }
 
@@ -62,8 +63,7 @@ function insert_failed_login($mysqli, $username) {
     if($statement->bind_param("si", $username, $failed) == false) {
 	echo("Something went wrong.");
     }
-    if($statement->execute() == false) {
-	echo("Something else went wrong.");
-    }
+    
+    echo($statement->execute())
 }
 ?>
