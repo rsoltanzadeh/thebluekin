@@ -51,9 +51,11 @@ if($result->num_rows > 1) {
     $statement = $mysqli->prepare("INSERT INTO login (username,success) VALUES (?,?)");
     $success = 1;
     if($statement->bind_param("si", $username, $success) == false) {
-	echo("Something else went wrong.");
+	echo("bind_param failed.");
     }
-    echo($statement->execute());
+    if(!$statement->execute()) {
+	echo($statement->error);
+    }
     exit;
 }
 
@@ -61,8 +63,10 @@ function insert_failed_login($mysqli, $username) {
     $statement = $mysqli->prepare("INSERT INTO login (username, success) VALUES (?,?)");
     $failed = 0;
     if($statement->bind_param("si", $username, $failed) == false) {
-	echo("Something went wrong.");
+	echo("bind_param failed.");
     }
-    echo($statement->execute());
+    if(!$statement->execute()) {
+	echo($statement->error);
+    }
 }
 ?>
