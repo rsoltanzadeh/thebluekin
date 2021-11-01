@@ -37,7 +37,7 @@ $db_credentials = json_decode(file_get_contents($sensitive_data . "/mysql_creden
 $pepper = file_get_contents($sensitive_data . "/mafia_password_pepper");
 $mysqli = new mysqli('localhost', $db_credentials->username, $db_credentials->password, 'mafia');
 
-$statement = $mysqli->prepare("SELECT username,password_hash FROM user WHERE username=?");
+$statement = $mysqli->prepare("SELECT username,password FROM user WHERE username=?");
 $statement->bind_param("s", $username);
 $statement->execute();
 $result = $statement->get_result();

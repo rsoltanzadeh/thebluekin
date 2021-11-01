@@ -74,7 +74,7 @@ if($result->num_rows > 0) {
         exit;
     } else {
         $hashed_password = password_hash($pepper . $password, PASSWORD_DEFAULT);
-        $statement = $mysqli->prepare("INSERT INTO user (username,email,password_hash) VALUES (?,?,?)");
+        $statement = $mysqli->prepare("INSERT INTO user (username,email,password) VALUES (?,?,?)");
         $statement->bind_param("sss", $username, $email, $hashed_password);
         $statement->execute();
         echo("success");
