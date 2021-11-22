@@ -1,6 +1,7 @@
 <?php
+require __DIR__ . '/../constants.php';
+
 session_start();
-$sensitive_data = "/home/ramin/sensitive_data";
 
 /*
  *  if(!isset($_POST['username']) || !isset($_POST['password'])) {
@@ -53,8 +54,8 @@ if (strlen($username) < 1) {
     exit;
 }
 
-$db_credentials = json_decode(file_get_contents($sensitive_data . "/mysql_credentials.json"));
-$pepper = file_get_contents($sensitive_data . "/mafia_password_pepper");
+$db_credentials = json_decode(file_get_contents(SENSITIVE_DATA_DIRECTORY . "/mysql_credentials.json"));
+$pepper = file_get_contents(SENSITIVE_DATA_DIRECTORY . "/mafia_password_pepper");
 $mysqli = new mysqli('localhost', $db_credentials->username, $db_credentials->password, 'mafia');
 
 $statement = $mysqli->prepare("SELECT id FROM user WHERE username=?");

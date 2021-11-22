@@ -1,23 +1,25 @@
 <template>
-  <div class="wrapper">
-    <div class="header">
-      <h1>The Bluekin</h1>
-      <h4>- a game of murder, subversion, and deception</h4>
+    <div class="wrapper">
+	<div class="header">
+	    <router-link to="/">
+		<h1>The Bluekin</h1>
+		<h4>- a game of murder, subversion, and deception</h4>
+	    </router-link>
+	</div>
+	<div class="form">
+	    <p class="input-label">Username:</p>
+	    <input v-model="formInputs.username" type="text" name="username" class="input" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
+	    <br>
+	    <p class="input-label">Password:</p>
+	    <input v-model="formInputs.password" type="password" name="password" class="input" />
+	    <br>
+	    <input :value="token" type="hidden" name="anti-csrf-token" class="input" />
+	    <button @click="login" class="submit">Log in</button>
+	    <div class="remember-wrapper">
+		<span>Remember me</span><input type="checkbox" value="Remember me" />
+	    </div>
+	</div>
     </div>
-    <div class="form">
-      <p class="input-label">Username:</p>
-      <input v-model="formInputs.username" type="text" name="username" class="input" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
-      <br>
-      <p class="input-label">Password:</p>
-      <input v-model="formInputs.password" type="password" name="password" class="input" />
-      <br>
-      <input :value="token" type="hidden" name="anti-csrf-token" class="input" />
-      <button @click="login" class="submit">Log in</button>
-      <div class="remember-wrapper">
-        <span>Remember me</span><input type="checkbox" value="Remember me" />
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -85,6 +87,14 @@
      color: $primary-cta-light;
  }
 
+ div.header {
+     a {
+	 cursor: pointer;
+	 color: $primary-cta-light;
+	 text-decoration: none;
+     }
+ }
+ 
  .form {
      margin-top: 100px;
      font-size: 1em;

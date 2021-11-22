@@ -1,6 +1,11 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../constants.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 session_start();
-$sensitive_data = "/home/ramin/sensitive_data";
 
 /*
  * if(!isset($_POST['username']) || !isset($_POST['password'])) {
@@ -24,6 +29,7 @@ else {
 }
 $username = $decoded_params->username;
 $password = $decoded_params->password;
+$token = $decoded_params->token;
 
 if (strlen($username) < 1) {
     echo "Username is too short.";
@@ -33,8 +39,15 @@ if (strlen($username) < 1) {
     exit;
 }
 
-$db_credentials = json_decode(file_get_contents($sensitive_data . "/mysql_credentials.json"));
-$pepper = file_get_contents($sensitive_data . "/mafia_password_pepper");
+if(!hash_equals($token, $_SESSION['token'])) { // prevent timing attack on the CSRF token
+    echo "Wrong token. Possible login CSRF attack!";
+    exit;
+}
+
+unset($_SESSION['token']);
+
+$db_credentials = json_decode(file_get_contents(SENSITIVE_DATA_DIRECTORY . "/mysql_credentials.json"));
+$pepper = file_get_contents(SENSITIVE_DATA_DIRECTORY . "/mafia_password_pepper");
 $mysqli = new mysqli('localhost', $db_credentials->username, $db_credentials->password, 'mafia');
 
 $statement = $mysqli->prepare("SELECT username,password FROM user WHERE username=?");
@@ -55,6 +68,14 @@ if($result->num_rows > 1) {
     }
     if(!$statement->execute()) {
 	echo($statement->error);
+    } else {
+	// login success
+
+	$_SESSION['username'] = $username;
+	
+	session_regenerate_id(); // prevent session fixation attack
+	
+	echo("success");
     }
     exit;
 }
