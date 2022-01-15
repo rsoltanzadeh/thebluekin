@@ -55,14 +55,14 @@
      font-family: $secondary-font;
      font-size: 1.4em;
      padding-top: 30px;
-     background: linear-gradient(to top right, $secondary-medium, $secondary-dark);
+     background: linear-gradient(to top right, $primary-medium, $primary-dark);
      height: 100vh;
      text-align: center;
  }
 
  h1 {
-     color: $secondary-cta-light;
-     text-shadow: 2px 2px 40px $secondary-cta-light;
+     color: $primary-cta-light;
+     // text-shadow: 2px 2px 40px $primary-cta-light;
  }
 
  div.box {
@@ -73,38 +73,38 @@
      padding: 40px;
      border-radius: 20px;
      max-width: 60%;
-     background-color: $secondary-dark;
-     color: $secondary-medium;
+     background-color: $primary-dark;
+     color: $primary-medium;
 
      div.router-wrapper {
          text-align: center;
 
          a.router {
              display: inline-block;
-             color: $secondary-cta-light;
+             color: $primary-cta-light;
              margin-top: 20px;
-             border: 2px solid $secondary-cta-light;
+             border: 2px solid $primary-cta-light;
              padding: 15px;
              border-radius: 10px;
              text-decoration: none;
 
              &:hover {
-                 background-color: $secondary-cta-light;
-                 color: $secondary-dark;
+                 background-color: $primary-cta-light;
+                 color: $primary-dark;
              }
          }
      }
      
      a {
-         color: $secondary-cta-medium;
+         color: $primary-cta-medium;
      }
      
      ul {
-         color: $secondary-light;
+         color: $primary-light;
          margin-top: 10px;
          margin-bottom: 20px;
          margin-left: 50px;
-         list-decoration-color: $secondary-cta-medium;
+         list-decoration-color: $primary-cta-medium;
          li {
              margin-top: 15px;
          }
@@ -114,7 +114,7 @@
          }
          p.list-text {
              font-size: 0.9em;
-             color: $secondary-medium;
+             color: $primary-medium;
          }
      }
  }
