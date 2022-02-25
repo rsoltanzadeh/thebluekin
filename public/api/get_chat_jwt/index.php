@@ -8,7 +8,7 @@ if(!isset($_SESSION['username'])) {
     exit;
 }
 
-$private_key = file_get_contents(SENSITIVE_DATA_DIRECTORY . "/jwtRS256.key")
+$private_key = file_get_contents(SENSITIVE_DATA_DIRECTORY . "/jwtRS256.key");
 $payload = array(
     "iss" => "thebluekin.com",
     "sub" => $_SESSION['username'],
