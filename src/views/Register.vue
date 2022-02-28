@@ -38,10 +38,7 @@
      methods: {
          async register() {
              try {
-                 let response = await fetch("/api/get_token/");
-                 const token = await response.text();
-                 console.log(token);
-                 response = await fetch("/api/register/", {
+                 response = await fetch("/api/register", {
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json'
@@ -49,8 +46,7 @@
                      body: JSON.stringify({
                          username: this.formInputs.username,
                          password: this.formInputs.password,
-                         email: this.formInputs.email,
-                         token: token
+                         email: this.formInputs.email
                      })
                  });
                  const message = await response.text();

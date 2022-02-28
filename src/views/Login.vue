@@ -38,18 +38,18 @@
      methods: {
          async login() {
              try {
-                 let response = await fetch("/api/get_token/");
+                 let response = await fetch("/api/get-token");
                  const token = await response.text();
                  console.log(token);
-                 response = await fetch("/api/login/", {
+                 response = await fetch("/api/login", {
                      method: 'POST',
                      headers: {
-                         'Content-Type': 'application/json'
+                         'Content-Type': 'application/json',
+                         'CSRF-Token': token
                      },
                      body: JSON.stringify({
                          username: this.formInputs.username,
-                         password: this.formInputs.password,
-                         token: token
+                         password: this.formInputs.password
                      })
                  })
                  
