@@ -42,6 +42,7 @@
                  const token = await response.text();
                  console.log(token);
                  response = await fetch("/api/login", {
+                     credentials: 'same-origin',
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json',
