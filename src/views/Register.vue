@@ -38,7 +38,7 @@
      methods: {
          async register() {
              try {
-                 response = await fetch("/api/register", {
+                 let response = await fetch("/api/register", {
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json'
