@@ -1,7 +1,6 @@
 <template>
   <div class="wrapper">
-    <h1>The Bluekin</h1>
-    <h4>- a game of murder, subversion, and deception</h4>
+    <main-header />
     <p>
       The Bluekin is an advanced version of the old social deduction game known
       as <em>Werewolf</em> or <em>Mafia</em>, extended and adjusted for online
@@ -33,6 +32,13 @@
 </template>
 
 <script>
+ import MainHeader from './MainHeader.vue';
+ 
+ export default {
+     components: {
+         MainHeader
+     }
+ }
 </script>
 
 <style scoped lang="scss">

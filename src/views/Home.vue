@@ -1,71 +1,62 @@
 <template>
-    <div class="friends">
-	<ul>
-	    <li v-for="onlineFriend in onlineFriends" class="online">
-		<p> {{ onlineFriend }} </p>
-	    </li>
-	    <li v-for="offlineFriend in offlineFriends" class="offline">
-		<p> {{ offlineFriend }} </p>
-	    </li>
-	</ul>
-    </div>
-
-    <div class="footer">
-	<ul class="chat-windows">
-	    <li v-for="window in chatWindows">
-		<div class="history-box">
-		    <p> {{ window.name }} </p>
-		    <ul class="messages">
-			<li v-for="(message, index) in window.messages">
-			    <p><span> {{ window.messages[index].timestamp }} </span> {{ message }} </p>
-			</li>
-		    </ul>
-		</div>
-		<div class="message-box">
-		    <input @click="sendMessage" type="text" placeholder="Type a message." />
-		    <button> Send </button>
-		</div>
-	    </li>
-	</ul>
-    </div>
+  <FriendBox />
 </template>
 
 <script>
- export default {
-     data() {
-	 return {
-	     onlineFriends: [],
-	     offlineFriends: [],
-	     chatWindows: []
-	 }
-     },
+import FriendBox from "./FriendBox.vue";
+export default {
+  components: {
+    FriendBox,
+  },
 
-     methods: {
-	 setFriendOnlineStatus(friend, onlineFlag) {
-	     if(this.onlineFriends.includes(friend))
-		 this.onlineFriends.splice(this.onlineFriends.indexOf(friend), 1);
+  data() {
+    return {};
+  },
 
-	     if(this.offlineFriends.includes(friend))
-		 this.offlineFriends.splice(this.offlineFriends.indexOf(friend), 1);
-	     
-	     if(onlineFlag) {
-		 this.onlineFriends.push(friend);
-	     } else {
-		 this.offlineFriends.push(friend);
-	     }
-	 }
-     },
+  computed: {
+  },
 
-     computed: {
-	 
-     },
-     
-     beforeMount() {
-	 this.$store.dispatch('setupChatServerConn');
-     }
- }
+  methods: {
+  }
+};
 </script>
 
 <style scoped lang="scss">
+/*
+    @import "./styles/_shared.scss";
+	*/
 
+div.friends {
+  width: 20%;
+  float: right;
+  height: 100vh;
+  background-color: lightblue;
+  display: flex;
+  flex-direction: column;
+}
+ul.friend-list {
+  background-color: yellow;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+ul.chat-window {
+  background-color: red;
+  height: 30%;
+}
+
+div.friend-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 5%;
+  background-color: blue;
+
+  & button {
+    cursor: pointer;
+    width: 35%;
+    height: 70%;
+  }
+}
 </style>

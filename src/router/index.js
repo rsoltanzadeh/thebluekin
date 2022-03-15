@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Landing from '../views/Landing.vue'
+import FrontPage from '../views/FrontPage.vue'
 
 const routes = [
     {
         path: '/',
-        name: 'Landing',
-        component: Landing
+        name: 'FrontPage',
+        component: FrontPage
     },
     {
         path: '/register',
@@ -24,6 +24,16 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import(/* webpackChunkName: "not-found" */ '../views/NotFound.vue')
     }
 ]
 
