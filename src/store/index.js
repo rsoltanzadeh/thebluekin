@@ -78,9 +78,9 @@ export default createStore({
 					console.log("onmessage: " + e.data);
 					const message = JSON.parse(e.data);
 					switch (message.type) {
-						case responseTypes.AUTHENTICATED:
+						case context.state.responseTypes.AUTHENTICATED:
 							break;
-						case responseTypes.MESSAGE:
+						case context.state.responseTypes.MESSAGE:
 							let d = new Date();
 							let timestamp = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
 							context.commit('addMessage', {
@@ -89,19 +89,19 @@ export default createStore({
 								"message": message.payload.text
 							});
 							break;
-						case responseTypes.FRIENDS:
+						case context.state.responseTypes.FRIENDS:
 							context.commit('setFriends', message.payload);
 							break;
-						case responseTypes.FOES:
+						case context.state.responseTypes.FOES:
 							context.commit('setFoes', message.payload);
 							break;
-						case responseTypes.CHAT_HISTORY:
+						case context.state.responseTypes.CHAT_HISTORY:
 							context.commit('setChatHistory', message.payload);
 							break;
-						case responseTypes.ONLINE_PEOPLE:
+						case context.state.responseTypes.ONLINE_PEOPLE:
 							context.commit('setOnlinePeople', message.payload);
 							break;
-						case responseTypes.ERROR:
+						case context.state.responseTypes.ERROR:
 							console.log("Error: " + message.payload);
 							break;
 						default:
