@@ -73,7 +73,7 @@ export default {
         const message = await response.text();
         console.log(message);
         if (message == "success") {
-          this.$router.push("/");
+          this.$router.push("/home");
         }
       } catch (e) {
         console.log(e);

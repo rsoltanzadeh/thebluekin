@@ -43,7 +43,7 @@ export default createStore({
 		},
 
 		setOnlinePeople(state, onlinePeople) {
-			state.onlinePeople = onlinePeople;
+			state.onlinePeople = onlinePeople.sort((a, b) => a.localeCompare(b));
 		},
 
 		addMessage(state, payloadObject) {
