@@ -1,5 +1,7 @@
 <template>
-  <FriendBox />
+  <div class="wrapper">
+    <FriendBox />
+  </div>
 </template>
 
 <script>
@@ -13,11 +15,9 @@ export default {
     return {};
   },
 
-  computed: {
-  },
+  computed: {},
 
-  methods: {
-  }
+  methods: {},
 };
 </script>
 
@@ -25,6 +25,13 @@ export default {
 /*
     @import "./styles/_shared.scss";
 	*/
+
+div.wrapper {
+  font-family: $main-font;
+  background: linear-gradient(to top right, $primary-medium, $primary-dark);
+  height: 100vh;
+  color: $primary-cta-light;
+}
 
 div.friends {
   width: 20%;

@@ -127,11 +127,11 @@ export default createStore({
 	},
 	getters: {
 		onlineFriends(state) {
-			return state.friends.filter(friend => onlinePeople.includes(friend));
+			return state.friends.filter(friend => state.onlinePeople.includes(friend));
 		},
 
 		offlineFriends(state) {
-			return state.friends.filter(friend => !onlinePeople.includes(friend));
+			return state.friends.filter(friend => !state.onlinePeople.includes(friend));
 		}
 	},
 	modules: {
