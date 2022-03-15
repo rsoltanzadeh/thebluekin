@@ -24,13 +24,16 @@ const routes = [
     {
         path: '/login',
         name: 'Login',
+        meta: {
+            disallowsAuth: true
+        },
         component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
     },
     {
         path: '/home',
         name: 'Home',
         meta: {
-            requresAuth: true
+            requiresAuth: true
         },
         component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
     },
@@ -47,12 +50,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requresAuth)) {
-        if (!store.getters.isLoggedIn) {
-            next({ name: 'Login' });
-        } else {
-            next();
-        }
+    const loggedIn = await store.dispatch('checkAuthentication');
+    if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+        next({ name: 'Login' });
+    } else if (to.matched.some(record => record.meta.disallowsAuth) && loggedIn) {
+        next({ name: 'Home' });
     } else {
         next();
     }

@@ -18,7 +18,6 @@ export default createStore({
 			ONLINE_PEOPLE: 4,
 			ERROR: 5
 		},
-		loggedIn: false,
 		chatServerConn: null,
 		friends: [],
 		foes: [],
@@ -128,6 +127,12 @@ export default createStore({
 			if(context.state.chatServerConn) {
 				context.state.chatServerConn.send(JSON);
 			}
+		},
+
+		async checkAuthentication(context) {
+			const response = await fetch('/api/check-auth');
+			const loggedIn = await response.json();
+			return loggedIn;
 		}
 	},
 	getters: {
