@@ -18,6 +18,7 @@ export default createStore({
 			ONLINE_PEOPLE: 4,
 			ERROR: 5
 		},
+		loggedIn: false,
 		chatServerConn: null,
 		friends: [],
 		foes: [],
@@ -25,6 +26,10 @@ export default createStore({
 		chatHistory: {}
 	},
 	mutations: {
+		setLoggedIn(state, bool) {
+			state.loggedIn = bool;
+		},
+
 		setChatServerConn(state, wsObject) {
 			state.chatServerConn = wsObject;
 		},
@@ -126,6 +131,10 @@ export default createStore({
 		}
 	},
 	getters: {
+		isLoggedIn(state) {
+			return state.loggedIn;
+		},
+
 		onlineFriends(state) {
 			return state.friends.filter(friend => state.onlinePeople.includes(friend));
 		},

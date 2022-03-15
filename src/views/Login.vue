@@ -73,6 +73,7 @@ export default {
         const message = await response.text();
         console.log(message);
         if (message == "success") {
+          this.$store.commit('setLoggedIn', true);
           this.$router.push("/home");
         }
       } catch (e) {
