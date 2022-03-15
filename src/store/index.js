@@ -67,6 +67,7 @@ export default createStore({
 
 			try {
 				const jwt = await fetch("/api/get-chat-jwt");
+				console.log(`Received JWT: ${jwt}`);
 				const wsConn = new WebSocket("wss://thebluekin.com/chat");
 				wsConn.onopen = function (e) {
 					wsConn.send(JSON.stringify({
