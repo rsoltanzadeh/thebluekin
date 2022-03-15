@@ -16,8 +16,7 @@ export default createStore({
 			FRIENDS: 2,
 			FOES: 3,
 			ONLINE_PEOPLE: 4,
-			CHAT_HISTORY: 5,
-			ERROR: 6
+			ERROR: 5
 		},
 		chatServerConn: null,
 		friends: [],
@@ -36,10 +35,6 @@ export default createStore({
 
 		setFoes(state, foes) {
 			state.foes = foes;
-		},
-
-		setChatHistory(state, chatHistory) {
-			state.chatHistory = chatHistory;
 		},
 
 		setOnlinePeople(state, onlinePeople) {
@@ -96,9 +91,6 @@ export default createStore({
 							break;
 						case context.state.responseTypes.FOES:
 							context.commit('setFoes', message.payload);
-							break;
-						case context.state.responseTypes.CHAT_HISTORY:
-							context.commit('setChatHistory', message.payload);
 							break;
 						case context.state.responseTypes.ONLINE_PEOPLE:
 							context.commit('setOnlinePeople', message.payload);
