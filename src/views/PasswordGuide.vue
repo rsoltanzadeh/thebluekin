@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <prompt button-text="Understood" active>
+    <prompt button-text="Understood" active startTransition>
       <p>
         This page is a short guide on how to create strong passwords. It is
         recommended to read through it before continuing to register an account.
@@ -55,7 +55,7 @@
           <p class="list-title">Mnemonics</p>
           <p class="list-text">
             Numbers and special characters make passwords far harder to remember
-            and are contrary to popular belief not necessary for strength. A
+            and are—contrary to popular belief—not necessary for strength. A
             password is strong as long as it is not too short. In order to
             create a mnemonic password, simply combine a handful of arbitrary
             (ideally random) words (e.g.
@@ -94,11 +94,11 @@ export default {
 
 div.wrapper {
   font-family: $secondary-font;
-  font-size: 1.4em;
-  padding-top: 30px;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
+  font-size: 1.2em;
   height: 100vh;
   text-align: center;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -108,14 +108,15 @@ h1 {
 
 div.box {
   text-align: initial;
-  margin: auto;
-  margin-top: 40px;
+  margin: min(5%, 40px) auto;
   display: inline-block;
-  padding: 40px;
+  padding: min(5%, 40px);
   border-radius: 20px;
-  max-width: 60%;
+  border: 2px solid $primary-light;
+  max-width: min(90%, 1200px);
   background-color: $primary-dark;
   color: $primary-medium;
+  overflow-wrap: break-word;
 
   div.router-wrapper {
     text-align: center;
@@ -123,11 +124,12 @@ div.box {
     a.router {
       display: inline-block;
       color: $primary-cta-light;
-      margin-top: 20px;
+      margin-top: min(2%, 20px);
       border: 2px solid $primary-cta-light;
-      padding: 15px;
-      border-radius: 10px;
+      padding: min(2%, 15px);
+      border-radius: min(3vw, 20px);
       text-decoration: none;
+      transition: all 0.3s;
 
       &:hover {
         background-color: $primary-cta-light;
@@ -144,7 +146,7 @@ div.box {
     color: $primary-light;
     margin-top: 10px;
     margin-bottom: 20px;
-    margin-left: 50px;
+    margin-left: min(10%, 50px);
     li {
       margin-top: 15px;
     }

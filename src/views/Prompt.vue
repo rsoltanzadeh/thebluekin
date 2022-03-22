@@ -1,8 +1,11 @@
 <template>
-  <Transition :appear="startTransition" name="slide-left">
-    <div v-if="isActive" class="background"></div>
-  </Transition>
   <Transition :appear="startTransition" name="slide-right">
+    <div v-if="isActive" class="background-left"></div>
+  </Transition>
+  <Transition :appear="startTransition" name="slide-left">
+    <div v-if="isActive" class="background-right"></div>
+  </Transition>
+  <Transition :appear="startTransition" name="slide-down">
     <div v-if="isActive" class="wrapper">
       <div class="window">
         <slot></slot>
@@ -69,40 +72,80 @@ export default {
 <style scoped lang="scss">
 /* @import "./styles/_shared.scss"; */
 
+$transition-curve: cubic-bezier(.71,.27,.32,.99);
+$transition-duration: 0.7s;
+$transition-delay: 0.3s;
+
 .slide-left-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all $transition-duration $transition-curve;
 }
 
 .slide-left-leave-active {
-  transition: all 0.3s ease-out;
+  transition: all $transition-duration $transition-curve;
 }
 
 .slide-left-enter-from,
 .slide-left-leave-to {
-  transform: translateX(-100%);
+  transform: translateX(100%);
 }
 
 .slide-right-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all $transition-duration $transition-curve;
 }
 
 .slide-right-leave-active {
-  transition: all 0.3s ease-out;
+  transition: all $transition-duration $transition-curve;
 }
 
 .slide-right-enter-from,
 .slide-right-leave-to {
-  transform: translateX(100%);
+  transform: translateX(-100%);
 }
 
-div.background {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
-  opacity: 0.8;
-  width: 100vw;
+.slide-up-enter-active {
+  transition: all $transition-duration $transition-curve;
+}
+
+.slide-up-leave-active {
+  transition: all $transition-duration $transition-curve;
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(100%);
+}
+
+.slide-down-enter-active {
+  transition: all $transition-duration $transition-curve;
+  transition-delay: $transition-delay;
+}
+
+.slide-down-leave-active {
+  transition: all $transition-duration $transition-curve;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  transform: translateY(-100%);
+}
+
+div.background-left, div.background-right {
+  background: black;
+  opacity: 0.3;
+  width: 50vw;
   height: 100vh;
+}
+
+div.background-left {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+}
+
+div.background-right {
+  position: fixed;
+  right: 0px;
+  top: 0px;
 }
 
 div.wrapper {
@@ -117,10 +160,11 @@ div.wrapper {
 }
 
 div.window {
-  padding: 20px;
+  border: 1px solid white;
+  padding: min(5%, 20px);
   opacity: 1;
   border-radius: 20px;
-  width: 40%;
+  width: min(90%, 800px);
   color: $primary-cta-light;
   background-color: $primary-dark;
   display: flex;
@@ -138,6 +182,7 @@ div.window {
     border: 0px;
     font-size: 1.2em;
   }
+  
   button {
     cursor: pointer;
     display: flex;
@@ -149,6 +194,7 @@ div.window {
     border-radius: 10px;
     border: 1px solid $primary-cta-medium;
     box-shadow: none;
+    transition: all 0.3s;
 
     &:hover {
       background: $primary-cta-medium;

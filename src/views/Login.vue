@@ -4,6 +4,7 @@
     <div class="form">
       <p class="input-label">Username:</p>
       <input
+        autofocus
         v-model="formInputs.username"
         type="text"
         name="username"
@@ -15,6 +16,7 @@
       <br />
       <p class="input-label">Password:</p>
       <input
+        @keyup.enter="login"
         v-model="formInputs.password"
         type="password"
         name="password"
@@ -36,7 +38,7 @@
 </template>
 
 <script>
-import MainHeader from './MainHeader.vue';
+import MainHeader from "./MainHeader.vue";
 
 export default {
   components: { MainHeader },
@@ -73,7 +75,6 @@ export default {
         const message = await response.text();
         console.log(message);
         if (message == "success") {
-          this.$store.commit('setLoggedIn', true);
           this.$router.push("/home");
         }
       } catch (e) {
@@ -82,7 +83,7 @@ export default {
     },
   },
 
-  created() {}
+  created() {},
 };
 </script>
 
@@ -95,22 +96,20 @@ export default {
 }
 
 div.wrapper {
-  font-family: $main-font;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
   height: 100vh;
-  padding-top: 50px;
-  text-align: center;
+  padding: min(10%, 50px);
   color: $primary-cta-light;
 }
 
 .form {
-  margin-top: 100px;
+  margin-top: min(10%, 100px);
   font-size: 1em;
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .input-label {
@@ -134,7 +133,7 @@ div.wrapper {
   user-select: initial;
   color: $primary-dark;
   padding: 10px;
-  width: 300px;
+  width: min(80%, 300px);
   margin-bottom: 20px;
 
   &::selection {
@@ -147,13 +146,13 @@ div.wrapper {
   margin-top: 30px;
   font-family: $main-font;
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 25px;
   padding: 10px;
   font-size: 1.5em;
   color: $primary-medium;
   background-color: $primary-dark;
   border: 1px solid $primary-dark;
-  transition: all 0.5s;
+  transition: all 0.3s;
 
   &:hover {
     color: $primary-cta-medium;

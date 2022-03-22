@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="home">
     <FriendBox />
   </div>
 </template>
@@ -26,44 +26,16 @@ export default {
     @import "./styles/_shared.scss";
 	*/
 
-div.wrapper {
+div.home {
   font-family: $main-font;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
+  background: transparent;
   height: 100vh;
   color: $primary-cta-light;
-}
 
-div.friends {
-  width: 20%;
-  float: right;
-  height: 100vh;
-  background-color: lightblue;
-  display: flex;
-  flex-direction: column;
-}
-ul.friend-list {
-  background-color: yellow;
-  flex-grow: 1;
-  overflow-y: scroll;
-}
-
-ul.chat-window {
-  background-color: red;
-  height: 30%;
-}
-
-div.friend-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 5%;
-  background-color: blue;
-
-  & button {
-    cursor: pointer;
-    width: 35%;
-    height: 70%;
+  .friend-box {
+    width: max(200px, 20%);
+    float: right;
+    height: 100vh;
   }
 }
 </style>

@@ -5,6 +5,7 @@
       <p class="input-label">Enter e-mail address:</p>
       <input
         v-model="formInputs.email"
+        autofocus
         type="text"
         name="email"
         class="input"
@@ -26,6 +27,7 @@
       <br />
       <p class="input-label">Create password:</p>
       <input
+        @keyup.enter="register"
         v-model="formInputs.password"
         type="password"
         name="password"
@@ -74,12 +76,16 @@ export default {
         const message = await response.text();
         console.log(message);
         if (message == "success") {
-          this.$router.push("/");
+          this.$router.push("/login");
         }
       } catch (e) {
         console.log(e);
       }
     },
+  },
+
+  beforeCreate() {
+    fetch("/api/logout");
   },
 
   created() {},
@@ -97,9 +103,8 @@ export default {
 
 div.wrapper {
   font-family: $main-font;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
   height: 100vh;
-  padding-top: 50px;
+  padding: min(10%, 50px);
   text-align: center;
   color: $primary-cta-light;
 }
@@ -113,7 +118,7 @@ div.header {
 }
 
 .form {
-  margin-top: 100px;
+  margin-top: min(10%, 100px);
   font-size: 1em;
   display: flex;
   flex: 1;
@@ -143,7 +148,7 @@ div.header {
   user-select: initial;
   color: $primary-dark;
   padding: 10px;
-  width: 300px;
+  width: min(80%, 300px);
   margin-bottom: 20px;
 
   &::selection {
@@ -153,19 +158,19 @@ div.header {
 }
 
 .submit {
-  margin-top: 50px;
+  margin-top: 30px;
   font-family: $main-font;
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 25px;
   padding: 10px;
   font-size: 1.5em;
-  color: $primary-cta-light;
-  background-color: transparent;
-  border: 1px solid $primary-cta-light;
+  color: $primary-medium;
+  background-color: $primary-dark;
+  border: 1px solid $primary-dark;
+  transition: all 0.3s;
 
   &:hover {
-    color: $primary-dark;
-    background-color: $primary-cta-medium;
+    color: $primary-cta-medium;
     border-color: $primary-cta-medium;
   }
 }

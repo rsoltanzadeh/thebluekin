@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component }">
-    <transition name="slide-up" appear mode="out-in">
+    <transition name="slide" appear mode="out-in">
       <component :is="Component" :key="$route.path" />
     </transition>
   </router-view>
@@ -9,17 +9,24 @@
 <style lang="scss">
 @import "./styles/_shared.scss";
 
-.slide-up-enter-active {
-  transition: all 0.8s
+$transition-curve: cubic-bezier(0.73, 0.19, 0.2, 0.81);
+$transition-duration: 0.7s;
+
+.slide-enter-active {
+  transition: all $transition-duration;
 }
 
-.slide-up-leave-active {
-  transition: all 0.8s;
+.slide-leave-active {
+  transition: all $transition-duration;
 }
 
-.slide-up-enter-from,
-.slide-up-leave-to {
+.slide-enter-from {
   transform: translateY(-30%);
+  opacity: 0;
+}
+
+.slide-leave-to {
+  transform: translateY(30%);
   opacity: 0;
 }
 #app {
@@ -27,6 +34,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  * {
+    font-family: $main-font;
+  }
+  
+  ::selection {
+    background-color: $primary-light;
+    color: $primary-dark;
+  }
+
   background: linear-gradient(to top right, $primary-medium, $primary-dark);
+  overflow: hidden;
 }
 </style>

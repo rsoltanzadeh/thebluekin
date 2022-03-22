@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <main-header />
+      <h1>The Bluekin</h1>
+      <h4>- a game of murder, subversion, and deception</h4>
     <p>
       The Bluekin is an advanced version of the old social deduction game known
       as <em>Werewolf</em> or <em>Mafia</em>, extended and adjusted for online
@@ -45,20 +46,16 @@
 /*
     @import "./styles/_shared.scss";
   */
-::selection {
-  background-color: $primary-light;
-  color: $primary-dark;
-}
+
 
 div.wrapper {
   height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
   font-family: $main-font;
   color: $primary-cta-light;
-  background: linear-gradient(to top right, $primary-medium, $primary-dark);
   margin: auto;
-  padding-left: 15%;
-  padding-right: 15%;
-  padding-top: 50px;
+  padding: 10vh 10vw;
   text-align: center;
 }
 
