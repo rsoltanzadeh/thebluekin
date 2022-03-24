@@ -102,7 +102,7 @@ export default {
     },
 
     messageTypes() {
-      return this.$store.state.messageTypes;
+      return this.$store.state.chatMessageTypes;
     },
 
     chatHistory() {
@@ -166,7 +166,7 @@ export default {
   },
 
   beforeMount() {
-    this.$store.dispatch("setupChatServerConn");
+    this.reconnect();
   },
 };
 </script>
