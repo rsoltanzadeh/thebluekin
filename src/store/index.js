@@ -111,7 +111,7 @@ export default createStore({
 			const response = await fetch("/api/get-chat-jwt");
 			const jwt = await response.text();
 			console.log(`Received JWT: ${jwt}`);
-			const wsConn = new WebSocket("ws://localhost/chat");
+			const wsConn = new WebSocket("wss://thebluekin.com/chat");
 			wsConn.onopen = function (e) {
 				wsConn.send(JSON.stringify({
 					"type": context.state.chatMessageTypes.AUTHENTICATOR,
@@ -195,7 +195,7 @@ export default createStore({
 			const response = await fetch("/api/get-game-jwt");
 			const jwt = await response.text();
 			console.log(`Received JWT: ${jwt}`);
-			const wsConn = new WebSocket("ws://localhost/game");
+			const wsConn = new WebSocket("wss://thebluekin.com/game");
 			wsConn.onopen = function (e) {
 				wsConn.send(JSON.stringify({
 					"type": context.state.gameMessageTypes.AUTHENTICATOR,
