@@ -1,24 +1,27 @@
 <template>
-  <Transition :appear="startTransition" name="slide-right">
-    <div v-if="isActive" class="background-left"></div>
-  </Transition>
-  <Transition :appear="startTransition" name="slide-left">
-    <div v-if="isActive" class="background-right"></div>
-  </Transition>
-  <Transition :appear="startTransition" name="slide-down">
-    <div v-if="isActive" class="wrapper">
-      <div class="window">
-        <slot></slot>
-        <input
-          v-model="textInput"
-          @keyup.enter="proceed"
-          v-if="hasTextInput"
-          type="text"
-        />
-        <button @click="proceed">{{ buttonText }}</button>
+  <div @keydown.esc="dismiss" tabindex="0" class="wrapper">
+    <Transition :appear="startTransition" name="slide-right">
+      <div v-show="isActive" class="background-left"></div>
+    </Transition>
+    <Transition :appear="startTransition" name="slide-left">
+      <div v-show="isActive" class="background-right"></div>
+    </Transition>
+    <Transition :appear="startTransition" name="slide-down">
+      <div v-show="isActive" class="window-wrapper">
+        <div class="window">
+          <slot></slot>
+          <input
+            ref="input"
+            v-model="textInput"
+            @keyup.enter="proceed"
+            v-if="hasTextInput"
+            type="text"
+          />
+          <button @click="proceed">{{ buttonText }}</button>
+        </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </div>
 </template>
 
 <script>
@@ -46,8 +49,8 @@ export default {
       type: Boolean,
     },
     startTransition: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
 
   methods: {
@@ -64,15 +67,16 @@ export default {
 
     activate() {
       this.isActive = true;
+      setTimeout(() => this.$refs.input.focus(), 100); // give the browser time to change visibility so focus works; ugly hack
     },
-  },
+  }
 };
 </script>
 
 <style scoped lang="scss">
 /* @import "./styles/_shared.scss"; */
 
-$transition-curve: cubic-bezier(.71,.27,.32,.99);
+$transition-curve: cubic-bezier(0.71, 0.27, 0.32, 0.99);
 $transition-duration: 0.7s;
 $transition-delay: 0.3s;
 
@@ -129,7 +133,8 @@ $transition-delay: 0.3s;
   transform: translateY(-100%);
 }
 
-div.background-left, div.background-right {
+div.background-left,
+div.background-right {
   background: black;
   opacity: 0.3;
   width: 50vw;
@@ -148,7 +153,7 @@ div.background-right {
   top: 0px;
 }
 
-div.wrapper {
+div.window-wrapper {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -182,7 +187,7 @@ div.window {
     border: 0px;
     font-size: 1.2em;
   }
-  
+
   button {
     cursor: pointer;
     display: flex;

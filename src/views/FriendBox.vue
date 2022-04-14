@@ -1,45 +1,101 @@
 <template>
   <div class="friend-box">
     <div v-if="!connected" class="disconnect-wrapper">
-      <p>Connection closed:<br><span>{{ closeReason }}</span></p>
+      <p>
+        Connection closed:<br /><span>{{ closeReason }}</span>
+      </p>
       <!-- <Roller /> -->
       <button @click="reconnect">Reconnect</button>
     </div>
+
     <div v-if="connected" class="wrapper">
       <ul class="friend-list">
         <li class="online-title"><p>Online</p></li>
         <li
           @click="openChat(onlineFriend)"
-          v-for="onlineFriend in onlineFriends"
+          v-for="(onlineFriend, index) in onlineFriends"
           class="online"
+          :key="index"
         >
-          <p>{{ onlineFriend }}</p>
-          <button class="friend-menu"></button>
+          <div class="friend-name">
+            <span
+              :class="{ unread: $store.state.unreadChats.has(onlineFriend) }"
+              class="unread-message-icon"
+            >
+              🖄
+            </span>
+            <p>{{ onlineFriend }}</p>
+          </div>
+          <button class="friend-menu">⋮</button>
         </li>
         <hr />
         <li class="offline-title"><p>Offline</p></li>
-        <li v-for="offlineFriend in offlineFriends" class="offline">
-          <p>{{ offlineFriend }}</p>
+        <li
+          @click="openChat(offlineFriend)"
+          v-for="(offlineFriend, index) in offlineFriends"
+          class="offline"
+          :key="index"
+        >
+          <div class="friend-name">
+            <span
+              :class="{ unread: $store.state.unreadChats.has(offlineFriend) }"
+              class="unread-message-icon"
+            >
+              🖄
+            </span>
+            <p>{{ offlineFriend }}</p>
+          </div>
+          <button class="friend-menu">⋮</button>
         </li>
       </ul>
 
-      <div v-if="currentChatFriend" class="chat-window">
-        <p class="friend-name">{{ currentChatFriend }}</p>
-        <hr />
-        <ul class="messages">
+      <div v-if="notificationsOpened" class="notification-window">
+        <ul class="notifications">
           <li
-            v-for="item in chatHistory[currentChatFriend]"
-            class="chat-message"
+            v-for="(friendRequest, index) in friendRequests"
+            :key="index"
+            class="friend-request"
           >
             <p>
-              <span class="timestamp">({{ item.timestamp }})</span>
-              <span class="author"
-                >{{ item.author == "" ? "" : " " + item.author }}:
-              </span>
-              <span class="message">{{ item.message }}</span>
+              Friend request from <span>"{{ friendRequest }}"</span>
             </p>
+            <div class="button-wrapper">
+              <button @click="addFriend(friendRequest)" class="accept">
+                ✓
+              </button>
+              <button
+                @click="dismissFriendRequest(friendRequest)"
+                class="decline"
+              >
+                ✕
+              </button>
+            </div>
           </li>
         </ul>
+      </div>
+      <div v-if="currentChatFriend && !notificationsOpened" class="chat-window">
+        <div class="chat-window-header">
+          <button style="visibility: hidden">✕</button>
+          <span class="friend-name">{{ currentChatFriend }}</span>
+          <button @click="closeChat">✕</button>
+        </div>
+        <div class="messages-wrapper">
+          <ul class="messages">
+            <li
+              v-for="(item, index) in currentChatHistory"
+              :key="index"
+              class="chat-message"
+            >
+              <p>
+                <span class="timestamp">({{ item.timestamp }})</span>
+                <span class="author"
+                  >{{ item.author == "" ? "" : " " + item.author }}:
+                </span>
+                <span class="message">{{ item.message }}</span>
+              </p>
+            </li>
+          </ul>
+        </div>
         <hr />
         <div class="message-box">
           <input
@@ -49,27 +105,39 @@
           />
         </div>
       </div>
-      <div class="friend-buttons">
-        <prompt
-          startTransition
-          ref="friendPrompt"
-          button-text="Add friend"
-          hasTextInput
-          :callback="addFriend"
-        >
-          <p>Enter the name of the user to add as friend.</p>
-        </prompt>
 
-        <prompt
-          ref="foePrompt"
-          button-text="Add foe"
-          hasTextInput
-          :callback="addFoe"
-        >
-          <p>Enter the name of the user to add as foe.</p>
-        </prompt>
-        <button @click="$refs.friendPrompt.activate">Add friend</button>
-        <button @click="$refs.foePrompt.activate">Add foe</button>
+      <div class="footer">
+        <div class="friend-buttons">
+          <prompt
+            startTransition
+            ref="friendPrompt"
+            button-text="Add friend"
+            hasTextInput
+            :callback="addFriend"
+          >
+            <p>Enter the name of the user to add as friend.</p>
+          </prompt>
+
+          <prompt
+            ref="foePrompt"
+            button-text="Add foe"
+            hasTextInput
+            :callback="addFoe"
+          >
+            <p>Enter the name of the user to add as foe.</p>
+          </prompt>
+          <button @click="$refs.friendPrompt.activate">Add friend</button>
+          <button @click="$refs.foePrompt.activate">Add foe</button>
+        </div>
+        <div class="notification-button-wrapper">
+          <button
+            :data-badge="friendRequests.length"
+            class="notification-button"
+            @click="notificationsOpened = !notificationsOpened"
+          >
+            🔔
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -88,11 +156,16 @@ export default {
     return {
       addFriendVisible: false,
       addFoeVisible: false,
-      currentChatFriend: null
+      currentChatFriend: null,
+      notificationsOpened: false,
     };
   },
 
   computed: {
+    friendRequests() {
+      return this.$store.state.friendRequests;
+    },
+
     onlineFriends() {
       return this.$store.getters.onlineFriends;
     },
@@ -105,8 +178,13 @@ export default {
       return this.$store.state.chatMessageTypes;
     },
 
-    chatHistory() {
-      return this.$store.state.chatHistory;
+    currentChatHistory() {
+      return this.$store.state.chatHistory[this.currentChatFriend];
+    },
+
+    lastCurrentChatMessage() {
+      if (!this.currentChatHistory) return;
+      return this.currentChatHistory[this.currentChatHistory.length - 1];
     },
 
     connected() {
@@ -115,7 +193,14 @@ export default {
 
     closeReason() {
       return this.$store.state.chatCloseReason;
-    }
+    },
+  },
+
+  watch: {
+    lastCurrentChatMessage() {
+      this.$store.state.unreadChats.delete(this.currentChatFriend);
+      console.log("Deleted notification.");
+    },
   },
 
   methods: {
@@ -127,10 +212,14 @@ export default {
       this.currentChatFriend = friendName;
     },
 
+    closeChat() {
+      this.currentChatFriend = null;
+    },
+
     addFriend(friendName) {
       const obj = this;
       this.$store.dispatch(
-        "send",
+        "sendChatMessage",
         JSON.stringify({
           type: obj.messageTypes.ADD_FRIEND,
           payload: friendName,
@@ -138,10 +227,21 @@ export default {
       );
     },
 
+    dismissFriendRequest(name) {
+      const obj = this;
+      this.$store.dispatch(
+        "sendChatMessage",
+        JSON.stringify({
+          type: obj.messageTypes.DISMISS_FRIEND_REQUEST,
+          payload: name,
+        })
+      );
+    },
+
     addFoe(foeName) {
       const obj = this;
       this.$store.dispatch(
-        "send",
+        "sendChatMessage",
         JSON.stringify({
           type: obj.messageTypes.ADD_FOE,
           payload: foeName,
@@ -152,7 +252,7 @@ export default {
     sendMessage(recipient, inputEvent) {
       const obj = this;
       this.$store.dispatch(
-        "send",
+        "sendChatMessage",
         JSON.stringify({
           type: obj.messageTypes.MESSAGE,
           payload: {
@@ -197,7 +297,7 @@ div.disconnect-wrapper {
   p {
     text-align: center;
     margin: 40px;
-    
+
     span {
       color: $primary-medium;
     }
@@ -231,9 +331,8 @@ ul.friend-list {
   background-color: $primary-dark;
   flex-grow: 1;
   flex-basis: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
-  border: 1px solid white;
 
   hr {
     margin-top: 5px;
@@ -261,9 +360,53 @@ ul.friend-list {
     cursor: pointer;
     border-left: 3px solid $primary-dark;
 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
     &:hover {
       border-color: $primary-medium;
       transition: background-color 0.5s;
+    }
+
+    div.friend-name {
+      display: flex;
+      align-items: center;
+      
+      span {
+        padding-top: 5px;
+        color: $primary-light;
+        margin-right: 30px;
+      }
+
+      p {
+        padding: 0px;
+        display: inline;
+      }
+
+      span.unread-message-icon {
+        visibility: hidden;
+
+        &.unread {
+          visibility: initial;
+        }
+      }
+    }
+
+    button.friend-menu {
+      background: none;
+      border: none;
+      color: $primary-light;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      margin-right: 20px;
+      padding: 5px;
+
+      &:hover {
+        border-color: $primary-light;
+      }
     }
   }
 
@@ -276,44 +419,121 @@ ul.friend-list {
   }
 }
 
+div.notification-window {
+  display: flex;
+  flex-direction: column;
+  background-color: $primary-dark;
+  height: 40%;
+  border: 1px solid $primary-light;
+  border-radius: 10%;
+  width: 90%;
+  margin: auto;
+
+  li {
+    padding: 0px 20px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    p > span {
+      color: $primary-light;
+    }
+
+    div.button-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        border-top: 3px solid transparent;
+        border-bottom: 3px solid transparent;
+        padding: 10px;
+        transition: all 0.3s;
+
+        &:hover {
+          border-bottom-color: $primary-cta-medium;
+        }
+
+        &.accept {
+          color: $primary-cta-medium;
+        }
+
+        &.decline {
+          color: red;
+        }
+      }
+    }
+  }
+}
+
 div.chat-window {
   display: flex;
   flex-direction: column;
   background-color: $primary-dark;
   height: 40%;
-  border: 1px solid white;
 
-  p.friend-name {
-    text-align: center;
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
-
-  ul.messages {
+  div.chat-window-header {
     display: flex;
-    flex-direction: column;
-    padding-left: 10px;
+    justify-content: space-between;
+    border-bottom: 1px solid $primary-light;
+    margin-bottom: 10px;
+    span.friend-name {
+      display: inline-block;
+      text-align: center;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
 
-    flex-basis: 0;
+    button {
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      border-top: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      padding: 10px;
+      margin-right: 20px;
+      transition: all 0.3s;
+      color: red;
 
-    flex-grow: 1;
-    overflow-y: scroll;
-
-    li.chat-message {
-      color: white;
-      text-align: left;
-      word-wrap: break-word;
-
-      span.author {
-        color: $primary-cta-medium;
-      }
-
-      span.timestamp {
-        font-size: 0.8em;
+      &:hover {
+        border-bottom-color: $primary-cta-medium;
       }
     }
   }
+  div.messages-wrapper {
+    overflow: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
 
+    ul.messages {
+      display: flex;
+      flex-direction: column;
+      padding-left: 10px;
+
+      flex-basis: 0;
+
+      flex-grow: 1;
+
+      li.chat-message {
+        color: white;
+        text-align: left;
+        word-wrap: break-word;
+
+        span.author {
+          color: $primary-cta-medium;
+        }
+
+        span.timestamp {
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
   div.message-box {
     margin-bottom: 10px;
     margin-top: 10px;
@@ -333,30 +553,64 @@ div.chat-window {
   }
 }
 
-div.friend-buttons {
+div.footer {
+  border-top: 1px solid $primary-medium;
+  padding: 10px 10px 0px 10px;
   display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-evenly;
   align-items: center;
-  align-self: flex-end;
-  height: max(50px, 5%);
-  background-color: $primary-dark;
+  justify-content: space-between;
 
-  & button {
+  div.friend-buttons {
+    display: flex;
+    align-items: center;
+    height: max(50px, 5%);
+    background-color: $primary-dark;
+
+    & button {
+      cursor: pointer;
+      padding: 10px 20px;
+      margin: 0px 10px;
+      background: $primary-dark;
+      border: 1px solid $primary-cta-light;
+      border-radius: 20px;
+      color: $primary-cta-light;
+      transition: all 0.3s;
+      white-space: nowrap;
+
+      &:hover {
+        border-color: transparent;
+        color: $primary-dark;
+        background: $primary-cta-light;
+      }
+    }
+  }
+
+  button.notification-button {
     cursor: pointer;
-    width: 35%;
-    height: 70%;
-    background: $primary-dark;
-    border: 1px solid $primary-cta-light;
-    border-radius: 15px;
-    color: $primary-cta-light;
-    transition: all 0.3s;
+    background: transparent;
+    border: none;
+    font-size: 1em;
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px;
+    text-align: center;
+    padding: 5px;
+    position: relative;
 
-    &:hover {
-      border-color: transparent;
-      color: $primary-dark;
-      background: $primary-cta-light;
+    &:after {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      min-width: 10px;
+      min-height: 10px;
+      line-height: 10px;
+      padding: 5px;
+      color: #fff;
+      background-color: #bf1f1f;
+      font-size: 10px;
+      border-radius: 20px;
+      content: attr(data-badge);
+      border: solid 1px #c93a3a;
     }
   }
 }

@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 
+const websocket_url = "ws://localhost";
+
 export default createStore({
 	state: {
 		chatMessageTypes: {
@@ -8,7 +10,8 @@ export default createStore({
 			ADD_FRIEND: 2,
 			ADD_FOE: 3,
 			REMOVE_FRIEND: 4,
-			REMOVE_FOE: 5
+			REMOVE_FOE: 5,
+			DISMISS_FRIEND_REQUEST: 6
 		},
 		chatResponseTypes: {
 			AUTHENTICATED: 0,
@@ -16,7 +19,8 @@ export default createStore({
 			FRIENDS: 2,
 			FOES: 3,
 			ONLINE_PEOPLE: 4,
-			ERROR: 5
+			ERROR: 5,
+			FRIEND_REQUESTS: 6
 		},
 		gameMessageTypes: {
 			AUTHENTICATOR: 0,
@@ -27,6 +31,18 @@ export default createStore({
 			PLAYERS: 1,
 			ERROR: 2
 		},
+		lobbyMessageTypes: {
+			AUTHENTICATOR: 0,
+			MESSAGE: 1
+		},
+		lobbyResponseTypes: {
+			AUTHENTICATED: 0,
+			ERROR: 1,
+			MESSAGE: 2,
+			ROOM: 3,
+			ROOMS: 4
+		},
+
 		username: localStorage.getItem('username'),
 		chatServerConn: null,
 		chatConnected: false,
@@ -34,13 +50,37 @@ export default createStore({
 		gameServerConn: null,
 		gameConnected: false,
 		gameCloseReason: null,
+
+		friendRequests: [],
 		friends: [],
 		foes: [],
 		onlinePeople: [],
 		chatHistory: {},
-		players: {}
+		unreadChats: new Set(),
+		players: {},
+		lobbyRoom: {},
+		lobbyRooms: []
 	},
 	mutations: {
+		addChatMessage(state, payloadObject) {
+			let singleChatHistory = state.chatHistory[payloadObject.windowName];
+			if (!singleChatHistory) {
+				singleChatHistory = [];
+			}
+			singleChatHistory.push({
+				"timestamp": payloadObject.timestamp,
+				"message": payloadObject.message,
+				"author": payloadObject.author,
+				"read": payloadObject.read
+			});
+			state.chatHistory[payloadObject.windowName] = singleChatHistory;
+			state.unreadChats.add(payloadObject.windowName);
+		},
+
+		setFriendRequests(state, array) {
+			state.friendRequests = array;
+		},
+
 		setChatCloseReason(state, text) {
 			state.chatCloseReason = text;
 		},
@@ -80,17 +120,22 @@ export default createStore({
 			state.players = players;
 		},
 
-		addMessage(state, payloadObject) {
-			let singleChatHistory = state.chatHistory[payloadObject.windowName];
-			if (!singleChatHistory) {
-				singleChatHistory = [];
-			}
-			singleChatHistory.push({
-				"timestamp": payloadObject.timestamp,
-				"message": payloadObject.message,
-				"author": payloadObject.author
+		setLobbyRoom(state, room) {
+			state.lobbyRoom = room;
+		},
+
+		setLobbyRooms(state, room) {
+			state.lobbyRooms = rooms;
+		},
+
+		unreadMessagesCount(state, friendName) {
+			let count = 0;
+			state.chatHistory[friendName].forEach((message) => {
+				if(!message.read) {
+					count++;
+				}
 			});
-			state.chatHistory[payloadObject.windowName] = singleChatHistory;
+			return count;
 		}
 	},
 	actions: {
@@ -111,7 +156,7 @@ export default createStore({
 			const response = await fetch("/api/get-chat-jwt");
 			const jwt = await response.text();
 			console.log(`Received JWT: ${jwt}`);
-			const wsConn = new WebSocket("wss://thebluekin.com/chat");
+			const wsConn = new WebSocket(`${websocket_url}/chat`);
 			wsConn.onopen = function (e) {
 				wsConn.send(JSON.stringify({
 					"type": context.state.chatMessageTypes.AUTHENTICATOR,
@@ -128,11 +173,12 @@ export default createStore({
 					case context.state.chatResponseTypes.MESSAGE:
 						let d = new Date();
 						let timestamp = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
-						context.commit('addMessage', {
+						context.commit('addChatMessage', {
 							"timestamp": timestamp,
 							"author": message.payload.author,
 							"message": message.payload.text,
-							"windowName": message.payload.windowName
+							"windowName": message.payload.windowName,
+							"read": false
 						});
 						break;
 					case context.state.chatResponseTypes.FRIENDS:
@@ -146,6 +192,9 @@ export default createStore({
 						break;
 					case context.state.chatResponseTypes.ERROR:
 						console.log("Error: " + message.payload);
+						break;
+					case context.state.chatResponseTypes.FRIEND_REQUESTS:
+						context.commit('setFriendRequests', message.payload);
 						break;
 					default:
 						wsConn.close(3001, "Received payload of invalid type: " + message.type);
@@ -195,7 +244,7 @@ export default createStore({
 			const response = await fetch("/api/get-game-jwt");
 			const jwt = await response.text();
 			console.log(`Received JWT: ${jwt}`);
-			const wsConn = new WebSocket("wss://thebluekin.com/game");
+			const wsConn = new WebSocket(`${websocket_url}/game`);
 			wsConn.onopen = function (e) {
 				wsConn.send(JSON.stringify({
 					"type": context.state.gameMessageTypes.AUTHENTICATOR,
@@ -245,10 +294,92 @@ export default createStore({
 				}
 			}, 10000 + 1000);
 		},
+		async setupLobbyServerConn(context) {
+			if (context.state.lobbyServerConn) {
+				context.commit('setLobbyConnected', true);
 
-		send(context, JSON) {
+				setInterval(() => {
+					if (context.state.lobbyServerConn && context.state.lobbyServerConn.readyState == 1) {
+						context.commit('setLobbyConnected', true);
+					} else {
+						context.commit('setLobbyConnected', false);
+					}
+				}, 10000 + 1000);
+				console.log("Already connected to lobby server. Skipping setup.");
+				return;
+			}
+			const response = await fetch("/api/get-lobby-jwt");
+			const jwt = await response.text();
+			console.log(`Received JWT: ${jwt}`);
+			const wsConn = new WebSocket(`${websocket_url}/lobby`);
+			wsConn.onopen = function (e) {
+				wsConn.send(JSON.stringify({
+					"type": context.state.lobbyMessageTypes.AUTHENTICATOR,
+					"payload": jwt
+				}));
+			};
+
+			wsConn.onmessage = function (e) {
+				console.log("Lobby connection: onmessage: " + e.data);
+				const message = JSON.parse(e.data);
+				switch (message.type) {
+					case context.state.lobbyResponseTypes.AUTHENTICATED:
+						break;
+					case context.state.lobbyResponseTypes.ROOMS:
+						setLobbyRooms(message.payload);
+						break;
+					case context.state.lobbyResponseTypes.ROOM:
+						setLobbyRoom(message.payload);
+						break;
+					case context.state.lobbyResponseTypes.ERROR:
+						console.log("Error: " + message.payload);
+						break;
+					default:
+						wsConn.close(3001, "Received payload of invalid type: " + message.type);
+				}
+			};
+
+			wsConn.onclose = function (e) {
+				console.log(`Lobby connection: onclose. Reason: ${e.reason} | Data: ${e.data}`);
+				context.commit('setLobbyServerConn', null);
+				context.commit('setLobbyConnected', false);
+				context.commit('setLobbyCloseReason', e.reason);
+			};
+
+			wsConn.onerror = function (e) {
+				console.log(`Lobby connection: onerror. Reason: ${e.reason} | Data: ${e.data}`);
+				context.commit('setLobbyServerConn', null);
+				context.commit('setLobbyConnected', false);
+				context.commit('setLobbyCloseReason', e.reason);
+			};
+
+			context.commit('setLobbyServerConn', wsConn);
+			context.commit('setLobbyConnected', true);
+
+			setInterval(() => {
+				if (context.state.lobbyServerConn && context.state.lobbyServerConn.readyState == 1) {
+					context.commit('setLobbyConnected', true);
+				} else {
+					context.commit('setLobbyConnected', false);
+				}
+			}, 10000 + 1000);
+		},
+
+		sendLobbyMessage(context, JSON) {
+			if (context.state.lobbyServerConn) {
+				context.state.lobbyServerConn.send(JSON);
+			}
+		},
+
+		sendGameMessage(context, JSON) {
 			if (context.state.gameServerConn) {
 				context.state.gameServerConn.send(JSON);
+			}
+		},
+
+		sendChatMessage(context, JSON) {
+			if (context.state.chatServerConn) {
+				context.state.chatServerConn.send(JSON);
 			}
 		},
 

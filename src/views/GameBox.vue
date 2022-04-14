@@ -60,7 +60,7 @@ export default {
       }
       const obj = this;
       this.$store.dispatch(
-        "send",
+        "sendGameMessage",
         JSON.stringify({
           type: obj.messageTypes.MOVE,
           payload: direction,
