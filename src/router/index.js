@@ -38,6 +38,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
     },
     {
+        path: '/play',
+        name: 'Lobby',
+        meta: {
+            requiresAuth: true
+        },
+        component: () => import(/* webpackChunkName: "lobby" */ '../views/Lobby.vue')
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import(/* webpackChunkName: "not-found" */ '../views/NotFound.vue')

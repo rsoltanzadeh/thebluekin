@@ -1,19 +1,17 @@
 <template>
-  <div class="game-box">
-    <div
-      v-for="(coordinates, player, index) in players"
-      :key="index"
-      class="player"
-      :style="{
-        'grid-row-start': coordinates[1] + 1,
-        'grid-row-end': coordinates[1] + 2,
-        'grid-column-start': coordinates[0] + 1,
-        'grid-column-end': coordinates[0] + 2,
-      }"
-      :class="{ self: $store.state.username == player }"
-    >
-      <p>{{ player }}</p>
-    </div>
+  <div
+    v-for="(coordinates, player, index) in players"
+    :key="index"
+    class="player"
+    :style="{
+      'grid-row-start': coordinates[1] + 1,
+      'grid-row-end': coordinates[1] + 2,
+      'grid-column-start': coordinates[0] + 1,
+      'grid-column-end': coordinates[0] + 2,
+    }"
+    :class="{ self: $store.state.username == player }"
+  >
+    <p>{{ player }}</p>
   </div>
 </template>
 

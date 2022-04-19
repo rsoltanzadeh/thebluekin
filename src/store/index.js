@@ -33,7 +33,10 @@ export default createStore({
 		},
 		lobbyMessageTypes: {
 			AUTHENTICATOR: 0,
-			MESSAGE: 1
+			MESSAGE: 1,
+			LEAVE_ROOM: 2,
+			CREATE_ROOM: 3,
+			JOIN_ROOM: 4
 		},
 		lobbyResponseTypes: {
 			AUTHENTICATED: 0,
@@ -50,6 +53,9 @@ export default createStore({
 		gameServerConn: null,
 		gameConnected: false,
 		gameCloseReason: null,
+		lobbyServerConn: null,
+		lobbyConnected: false,
+		lobbyCloseReason: null,
 
 		friendRequests: [],
 		friends: [],
@@ -92,6 +98,7 @@ export default createStore({
 		setChatServerConn(state, wsObject) {
 			state.chatServerConn = wsObject;
 		},
+
 		setGameCloseReason(state, text) {
 			state.gameCloseReason = text;
 		},
@@ -120,11 +127,23 @@ export default createStore({
 			state.players = players;
 		},
 
+		setLobbyServerConn(state, wsObject) {
+			state.lobbyServerConn = wsObject;
+		},
+
+		setLobbyConnected(state, bool) {
+			state.lobbyConnected = bool;
+		},
+
+		setLobbyCloseReason(state, text) {
+			state.lobbyCloseReason = text;
+		},
+
 		setLobbyRoom(state, room) {
 			state.lobbyRoom = room;
 		},
 
-		setLobbyRooms(state, room) {
+		setLobbyRooms(state, rooms) {
 			state.lobbyRooms = rooms;
 		},
 
@@ -326,16 +345,16 @@ export default createStore({
 					case context.state.lobbyResponseTypes.AUTHENTICATED:
 						break;
 					case context.state.lobbyResponseTypes.ROOMS:
-						setLobbyRooms(message.payload);
+						context.commit('setLobbyRooms', message.payload);
 						break;
 					case context.state.lobbyResponseTypes.ROOM:
-						setLobbyRoom(message.payload);
+						context.commit('setLobbyRoom', message.payload);
 						break;
 					case context.state.lobbyResponseTypes.ERROR:
 						console.log("Error: " + message.payload);
 						break;
 					default:
-						wsConn.close(3001, "Received payload of invalid type: " + message.type);
+						console.log("Received payload of invalid type: " + message.type);
 				}
 			};
 
