@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-const websocket_url = "ws://localhost";
+const websocket_url = "wss://thebluekin.com";
 
 export default createStore({
 	state: {
