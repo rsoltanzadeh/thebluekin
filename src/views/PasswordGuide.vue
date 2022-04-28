@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="password-guide">
     <prompt button-text="Understood" active startTransition>
       <p>
         This page is a short guide on how to create strong passwords. It is
@@ -92,7 +92,7 @@ export default {
  @import "./styles/_shared.scss"; 
 */
 
-div.wrapper {
+div.password-guide {
   font-family: $secondary-font;
   font-size: 1.2em;
   height: 100vh;
