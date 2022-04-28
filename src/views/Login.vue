@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <main-header />
+    <p class="message"> {{ message }} </p>
     <div class="form">
       <p class="input-label">Username:</p>
       <input
@@ -50,6 +51,7 @@ export default {
         password: "",
       },
       token: "",
+      message: ""
     };
   },
 
@@ -77,6 +79,8 @@ export default {
         if (message == "success") {
           localStorage.setItem('username', this.formInputs.username);
           this.$router.push("/home");
+        } else {
+          this.message = message;
         }
       } catch (e) {
         console.log(e);
@@ -102,8 +106,15 @@ div.wrapper {
   color: $primary-cta-light;
 }
 
-.form {
+p.message {
+  font-size: 1.2em;
+  color: $primary-cta-medium;
+  text-align: center;
   margin-top: min(10%, 100px);
+}
+
+.form {
+  margin-top: min(5%, 50px);
   font-size: 1em;
   display: flex;
   flex: 1;

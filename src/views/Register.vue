@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <main-header />
+    <p class="message"> {{ message }} </p>
     <div class="form">
       <p class="input-label">Enter e-mail address:</p>
       <input
@@ -56,6 +57,7 @@ export default {
         password: "",
       },
       token: "",
+      message: ""
     };
   },
 
@@ -77,6 +79,8 @@ export default {
         console.log(message);
         if (message == "success") {
           this.$router.push("/login");
+        } else {
+          this.message = message;
         }
       } catch (e) {
         console.log(e);
@@ -117,8 +121,15 @@ div.header {
   }
 }
 
-.form {
+p.message {
+  font-size: 1.2em;
+  color: $primary-cta-medium;
+  text-align: center;
   margin-top: min(10%, 100px);
+}
+
+.form {
+  margin-top: min(5%, 50px);
   font-size: 1em;
   display: flex;
   flex: 1;
