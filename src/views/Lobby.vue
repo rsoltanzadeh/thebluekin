@@ -58,7 +58,7 @@
 import FriendBox from "./FriendBox.vue";
 export default {
   components: {
-    FriendBox,
+    FriendBox
   },
 
   data() {

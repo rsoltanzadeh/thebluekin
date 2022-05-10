@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <header>
+      <button @click="logout">Log out</button>
+    </header>
     <router-link to="/play">
       <p class="play-button">Play</p>
     </router-link>
@@ -11,7 +14,7 @@
 import FriendBox from "./FriendBox.vue";
 export default {
   components: {
-    FriendBox,
+    FriendBox
   },
 
   data() {
@@ -20,7 +23,20 @@ export default {
 
   computed: {},
 
-  methods: {},
+  methods: {
+        async logout() {
+      try {
+        let response = await fetch("/api/logout");
+        const message = await response.text();
+        console.log(message);
+        if (message == "success") {
+          this.$router.push("/");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  },
 };
 </script>
 

@@ -152,9 +152,9 @@ p.message {
 
 .input {
   outline: none;
-  background-color: transparent;
+  background-color: $primary-medium;
   border-radius: 30px;
-  border: 1px solid $primary-medium;
+  border: 2px solid $primary-light;
   font-size: 1.5em;
   user-select: initial;
   color: $primary-dark;
@@ -165,6 +165,11 @@ p.message {
   &::selection {
     background-color: $primary-medium;
     color: $primary-dark;
+  }
+
+  &:focus {
+    outline: 2px solid $primary-cta-light;
+    border-color: transparent;
   }
 }
 
@@ -177,7 +182,7 @@ p.message {
   font-size: 1.5em;
   color: $primary-medium;
   background-color: $primary-dark;
-  border: 1px solid $primary-dark;
+  border: 2px solid $primary-dark;
   transition: all 0.3s;
 
   &:hover {
