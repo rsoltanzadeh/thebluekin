@@ -1,14 +1,9 @@
 <template>
-  <div class="main-header">    
-    <button style="visibility:hidden" class="burger"> <!-- invisible center-helper -->
-      ☰
-    </button>
+  <div class="main-header">
+    <div @click="toggleNav" v-show="showNav" class="background-modal"></div>
     <router-link class="logo" to="/">
       <h1>The Bluekin</h1>
     </router-link>
-    <button @click="toggleNav" :class="{ rotated: showNav }" class="burger">
-      ☰
-    </button>
     <div class="nav-wrapper">
       <router-link class="nav-item" to="/">
         <p>Home</p>
@@ -37,6 +32,9 @@
         <p>Register</p>
       </router-link>
     </div>
+    <button @click="toggleNav" :class="{ moved: showNav }" class="nav-icon">
+      ☝
+    </button>
   </div>
 </template>
 
@@ -72,6 +70,16 @@ div.main-header {
   margin: 0;
   padding: 0;
 
+  div.background-modal {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
   a {
     cursor: pointer;
     color: $primary-cta-light;
@@ -103,16 +111,35 @@ div.main-header {
     }
   }
 
-  div.secondary-nav-wrapper {
+  .nav-icon {
     display: none;
-    top: 0px;
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    color: $primary-cta-light;
+    font-size: 3em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: all 0.6s ease-out;
+
+    &.moved {
+      transform: translateY(calc(-100vh + 4rem + 100%)) rotate(180deg);
+      color: $primary-dark;
+    }
+  }
+
+  div.secondary-nav-wrapper {
+    width: 100vw;
+    display: none;
+    bottom: 0px;
     left: 0px;
-    position: absolute;
-    z-index: 1;
+    position: fixed;
+    z-index: 2;
     background-color: black;
     opacity: 0.8;
     flex-direction: column;
-    transform: translateY(-100%);
+    transform: translateY(100%);
     transition: all 0.3s ease-out;
 
     &.visible {
@@ -160,10 +187,10 @@ div.main-header {
 @media (max-width: 40rem) {
   div.main-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 0rem 2rem;
-    
+
     .logo {
       margin: 0;
     }
@@ -176,6 +203,9 @@ div.main-header {
       display: flex;
     }
     .burger {
+      display: none;
+    }
+    .nav-icon {
       display: block;
     }
   }
