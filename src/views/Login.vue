@@ -101,34 +101,32 @@ export default {
 }
 
 div.wrapper {
-  height: 100vh;
-  padding: min(10%, 50px);
+  min-height: 100vh;
+  text-align: center;
   color: $primary-cta-light;
 }
 
 p.message {
-  font-size: 1.2em;
+  font-size: min(calc(1.2vh + 2vw), 1.2rem);
   color: $primary-cta-medium;
   text-align: center;
-  margin-top: min(10%, 100px);
+  margin: 8vh;
 }
 
 .form {
   margin-top: min(5%, 50px);
-  font-size: 1em;
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
 }
 
 .input-label {
   color: $primary-light;
   text-shadow: 0px 0px 0px $primary-dark;
-  font-size: 1.5em;
-  margin: 24px;
+  font-size: min(calc(1.5vh + 2.4vw), 1.5rem);
+  margin-bottom: 1rem;
 
   &::selection {
     background-color: $primary-medium;
@@ -139,14 +137,14 @@ p.message {
 .input {
   outline: none;
   background-color: $primary-medium;
-  border-radius: 30px;
+  border-radius: 5vh;
   border: 2px solid $primary-light;
-  font-size: 1.5em;
+  font-size: min(calc(1.5vh + 2vw), 1.5rem);
   user-select: initial;
   color: $primary-dark;
-  padding: 10px;
-  width: min(80%, 300px);
-  margin-bottom: 20px;
+  padding: 0.5rem;
+  width: min(60vw, 18rem);
+  margin-bottom: 2rem;
 
   &::selection {
     background-color: $primary-medium;
@@ -160,12 +158,11 @@ p.message {
 }
 
 .submit {
-  margin-top: 30px;
-  font-family: $main-font;
+  margin-top: 2rem;
   cursor: pointer;
-  border-radius: 25px;
-  padding: 10px;
-  font-size: 1.5em;
+  border-radius: 2rem;
+  padding: 0.8rem;
+  font-size: min(calc(1.5vh + 2.3vw), 1.5rem);
   color: $primary-medium;
   background-color: $primary-dark;
   border: 2px solid $primary-dark;
@@ -178,14 +175,14 @@ p.message {
 }
 
 .remember-wrapper {
-  margin-top: 20px;
+  margin-top: 2rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 
   span {
-    margin-right: 10px;
+    margin-right: 1rem;
   }
 }
 </style>

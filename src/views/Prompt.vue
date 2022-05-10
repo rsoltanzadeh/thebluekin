@@ -136,8 +136,8 @@ $transition-delay: 0.3s;
 div.background-left,
 div.background-right {
   background: black;
-  opacity: 0.3;
-  width: 50vw;
+  opacity: 0.5;
+  width: 50%;
   height: 100vh;
 }
 
@@ -166,10 +166,11 @@ div.window-wrapper {
 
 div.window {
   border: 1px solid white;
-  padding: min(5%, 20px);
+  padding: min(1.5rem, 5%);
   opacity: 1;
-  border-radius: 20px;
-  width: min(90%, 800px);
+  border-radius: max(2rem, 2vw);
+  font-size: min(2.4vh, 1.2rem);
+  width: min(80%, 800px);
   color: $primary-cta-light;
   background-color: $primary-dark;
   display: flex;

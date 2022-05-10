@@ -93,9 +93,8 @@ export default {
 */
 
 div.password-guide {
-  font-family: $secondary-font;
-  font-size: 1.2em;
-  height: 100vh;
+  font-size: min(2.5vh, 1.2rem);
+  min-height: 100vh;
   text-align: center;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -103,17 +102,17 @@ div.password-guide {
 
 h1 {
   color: $primary-cta-light;
-  // text-shadow: 2px 2px 40px $primary-cta-light;
+  margin-top: 5vh;
 }
 
 div.box {
   text-align: initial;
-  margin: min(5%, 40px) auto;
+  margin: 5vh auto;
   display: inline-block;
-  padding: min(5%, 40px);
-  border-radius: 20px;
+  padding: min(3rem, 5%);
+  border-radius: max(2rem, 4vw);
   border: 2px solid $primary-light;
-  max-width: min(90%, 1200px);
+  max-width: min(90vw, 70rem);
   background-color: $primary-dark;
   color: $primary-medium;
   overflow-wrap: break-word;
@@ -126,8 +125,8 @@ div.box {
       color: $primary-cta-light;
       margin-top: min(2%, 20px);
       border: 2px solid $primary-cta-light;
-      padding: min(2%, 15px);
-      border-radius: min(3vw, 20px);
+      padding: min(5%, 1.2rem);
+      border-radius: 3rem;
       text-decoration: none;
       transition: all 0.3s;
 
