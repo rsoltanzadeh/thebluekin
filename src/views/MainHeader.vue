@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <div @click="toggleNav" v-show="showNav" class="background-modal"></div>
-    <router-link class="logo" to="/">
+    <router-link class="logo" to="">
       <h1>The Bluekin</h1>
     </router-link>
     <div class="nav">

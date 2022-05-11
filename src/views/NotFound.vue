@@ -52,6 +52,7 @@ div.not-found {
 }
 
 p {
+  padding: 0 10vw;
   font-size: 2em;
   margin-top: 5rem;
   color: $primary-light;

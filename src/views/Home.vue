@@ -19,7 +19,8 @@ import FriendBox from "./FriendBox.vue";
 import MainHeader from "./MainHeader.vue";
 export default {
   components: {
-    FriendBox, MainHeader
+    FriendBox,
+    MainHeader,
   },
 
   data() {
@@ -27,23 +28,23 @@ export default {
       showFriendBox: false,
       links: [
         {
-          "name": "Play",
-          "url": "/play"
+          name: "Play",
+          url: "/play",
         },
         {
-          "name": "Log out",
-          "url": "/logout"
-        }
-      ]
+          name: "Log out",
+          url: "/logout",
+        },
+      ],
     };
   },
 
   computed: {
     friendBoxIconContent() {
       if (this.showFriendBox) {
-        return "🗙";
+        return "➤";
       } else {
-        return "🗨";
+        return "➤";
       }
     },
   },
@@ -102,7 +103,7 @@ div.home {
     right: 0;
     display: flex;
     transform: translateX(min(25rem, 100vw));
-    transition: all 0.4s ease-out;
+    transition: all 0.6s ease-in-out;
     pointer-events: none;
 
     &.visible {
@@ -115,14 +116,18 @@ div.home {
       cursor: pointer;
       background: none;
       border: none;
-      padding: 1rem 2rem;
-      font-size: 2rem;
+      padding: 2rem 3rem;
+      font-size: 2em;
       color: $primary-cta-light;
       align-self: flex-end;
       transition: all 0.6s linear;
       pointer-events: auto;
-    }
+      transform: rotate(180deg);
 
+      &.visible {
+        transform: rotate(0deg);
+      }
+    }
     .friend-box {
       width: min(25rem, 100vw);
       height: 100vh;
@@ -142,7 +147,14 @@ div.home {
       }
 
       .friend-box-icon {
-        padding: 0 1rem;
+        padding: 1rem 2rem;
+        transform: rotate(-90deg);
+
+        &.visible {
+          transform: rotate(450deg);
+          color: $primary-dark;
+          -webkit-text-stroke: 2px $primary-cta-light;
+        }
       }
 
       .friend-box {
