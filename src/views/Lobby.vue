@@ -94,9 +94,9 @@ export default {
   computed: {
     friendBoxIconContent() {
       if (this.showFriendBox) {
-        return "🗙";
+        return "➤";
       } else {
-        return "🗨";
+        return "➤";
       }
     },
 
@@ -190,7 +190,7 @@ div.lobby {
     right: 0;
     display: flex;
     transform: translateX(min(25rem, 100vw));
-    transition: all 0.4s ease-out;
+    transition: all 0.6s ease-in-out;
     pointer-events: none;
 
     &.visible {
@@ -209,6 +209,11 @@ div.lobby {
       align-self: flex-end;
       transition: all 0.6s linear;
       pointer-events: auto;
+      transform: rotate(180deg);
+
+      &.visible {
+        transform: rotate(0deg);
+      }
     }
 
     .friend-box {
@@ -360,7 +365,14 @@ div.lobby {
       }
 
       .friend-box-icon {
-        padding: 0 1rem;
+        padding: 1rem 2rem;
+        transform: rotate(-90deg);
+
+        &.visible {
+          transform: rotate(450deg);
+          color: $primary-dark;
+          -webkit-text-stroke: 2px $primary-cta-light;
+        }
       }
 
       .friend-box {
