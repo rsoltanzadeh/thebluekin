@@ -1,8 +1,10 @@
 <template>
-  <div @keydown.esc="dismiss" tabindex="0" class="wrapper">
+  <div @keydown.esc="dismiss" tabindex="0" class="prompt">
+    <!--
     <Transition :appear="startTransition" name="slide-right">
       <div v-show="isActive" class="background-left"></div>
     </Transition>
+    -->
     <Transition :appear="startTransition" name="slide-left">
       <div v-show="isActive" class="background-right"></div>
     </Transition>
@@ -137,8 +139,9 @@ div.background-left,
 div.background-right {
   background: black;
   opacity: 0.5;
-  width: 50%;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
 }
 
 div.background-left {
@@ -162,9 +165,11 @@ div.window-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 }
 
 div.window {
+  z-index: 2;
   border: 1px solid white;
   padding: min(1.5rem, 5%);
   opacity: 1;

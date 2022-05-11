@@ -28,7 +28,6 @@
           </div>
           <button class="friend-menu">⋮</button>
         </li>
-        <hr />
         <li class="offline-title"><p>Offline</p></li>
         <li
           @click="openChat(offlineFriend)"
@@ -107,6 +106,13 @@
       </div>
 
       <div class="footer">
+        <button
+          style="visibility: hidden"
+          :data-badge="friendRequests.length"
+          class="notification-button"
+        >
+          🔔
+        </button>
         <div class="friend-buttons">
           <prompt
             startTransition
@@ -276,11 +282,8 @@ export default {
     @import "./styles/_shared.scss";
 	*/
 
-ul {
-  list-style-type: none;
-}
-
 div.friend-box {
+  padding-top: 1rem;
   display: flex;
   background-color: $primary-dark;
 }
@@ -296,7 +299,6 @@ div.disconnect-wrapper {
 
   p {
     text-align: center;
-    margin: 40px;
 
     span {
       color: $primary-medium;
@@ -304,12 +306,12 @@ div.disconnect-wrapper {
   }
 
   button {
-    padding: 13px 20px;
-    margin-top: 20px;
+    padding: 0.7rem 1rem;
+    margin-top: 2rem;
     background-color: $primary-cta-medium;
     border: 1px solid $primary-cta-medium;
     color: $primary-dark;
-    border-radius: 25px;
+    border-radius: 2rem;
     cursor: pointer;
     transition: all 0.3s;
 
@@ -322,12 +324,14 @@ div.disconnect-wrapper {
 
 div.wrapper {
   height: 100%;
+  width: 100%;
   display: flex;
   flex: 1;
   flex-direction: column;
 }
 
 ul.friend-list {
+  font-size: 0.8em;
   background-color: $primary-dark;
   flex-grow: 1;
   flex-basis: 0;
@@ -335,8 +339,7 @@ ul.friend-list {
   overflow-x: hidden;
 
   hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 1rem 0;
   }
 
   li.online-title,
@@ -349,14 +352,16 @@ ul.friend-list {
   }
 
   li.offline-title {
+    border-top: 1px solid $primary-medium;
+    padding-top: 1rem;
+    margin-top: 1rem;
     color: gray;
   }
 
   li.online,
   li.offline {
     width: 100%;
-    margin-left: 10px;
-    padding: 10px;
+    padding: 0 1rem;
     cursor: pointer;
     border-left: 3px solid $primary-dark;
 
@@ -372,19 +377,21 @@ ul.friend-list {
     div.friend-name {
       display: flex;
       align-items: center;
-      
+
       span {
-        padding-top: 5px;
+        padding-top: 0.5rem;
         color: $primary-light;
-        margin-right: 30px;
+        margin-right: 3rem;
       }
 
       p {
-        padding: 0px;
+        padding: 0;
         display: inline;
       }
 
       span.unread-message-icon {
+        margin: 0;
+        padding: 0;
         visibility: hidden;
 
         &.unread {
@@ -400,9 +407,8 @@ ul.friend-list {
       font-size: 1.2em;
       cursor: pointer;
       border: 1px solid transparent;
-      border-radius: 10px;
-      margin-right: 20px;
-      padding: 5px;
+      border-radius: 1rem;
+      padding: 0.5rem;
 
       &:hover {
         border-color: $primary-light;
@@ -423,10 +429,10 @@ div.notification-window {
   display: flex;
   flex-direction: column;
   background-color: $primary-dark;
+  border: 1px solid $primary-medium;
+  border-radius: 1rem 1rem 0 0;
   height: 40%;
-  border: 1px solid $primary-light;
-  border-radius: 10%;
-  width: 90%;
+  width: 100%;
   margin: auto;
 
   li {
@@ -479,13 +485,12 @@ div.chat-window {
   div.chat-window-header {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid $primary-light;
-    margin-bottom: 10px;
+    border-bottom: 1px dotted $primary-light;
+
     span.friend-name {
       display: inline-block;
       text-align: center;
-      margin-bottom: 10px;
-      margin-top: 10px;
+      margin: auto;
     }
 
     button {
@@ -494,8 +499,8 @@ div.chat-window {
       border: none;
       border-top: 3px solid transparent;
       border-bottom: 3px solid transparent;
-      padding: 10px;
-      margin-right: 20px;
+      padding: 0.5rem;
+      margin-right: 1rem;
       transition: all 0.3s;
       color: red;
 
@@ -513,7 +518,6 @@ div.chat-window {
     ul.messages {
       display: flex;
       flex-direction: column;
-      padding-left: 10px;
 
       flex-basis: 0;
 
@@ -535,27 +539,34 @@ div.chat-window {
     }
   }
   div.message-box {
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin: 0.5em auto;
     width: 100%;
     display: flex;
     justify-content: center;
 
     input {
-      width: 90%;
+      width: 15rem;
+      max-width: 100%;
       background-color: $primary-medium;
       border: 1px solid $primary-dark;
-      padding: 5px;
-      border-radius: 10px;
-      color: white;
+      padding: 0.3rem;
+      border-radius: 1rem;
+      color: $primary-dark;
       outline: none;
+
+      &:focus {
+        outline: 2px solid $primary-cta-light;
+        border-color: transparent;
+      }
     }
   }
 }
 
 div.footer {
+  font-size: 0.75em;
+  padding: 0.5em 2em;
+  width: 100%;
   border-top: 1px solid $primary-medium;
-  padding: 10px 10px 0px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -563,16 +574,16 @@ div.footer {
   div.friend-buttons {
     display: flex;
     align-items: center;
-    height: max(50px, 5%);
     background-color: $primary-dark;
 
     & button {
+      font-size: 0.9em;
       cursor: pointer;
-      padding: 10px 20px;
-      margin: 0px 10px;
+      padding: 0.7em;
+      margin: 0 1em;
       background: $primary-dark;
       border: 1px solid $primary-cta-light;
-      border-radius: 20px;
+      border-radius: 1rem;
       color: $primary-cta-light;
       transition: all 0.3s;
       white-space: nowrap;
@@ -590,25 +601,21 @@ div.footer {
     background: transparent;
     border: none;
     font-size: 1em;
-    display: inline-block;
-    vertical-align: top;
-    margin: 10px;
     text-align: center;
-    padding: 5px;
     position: relative;
 
     &:after {
       position: absolute;
-      right: -10px;
-      top: -10px;
-      min-width: 10px;
-      min-height: 10px;
-      line-height: 10px;
-      padding: 5px;
-      color: #fff;
+      right: -1em;
+      top: -1em;
+      min-width: 1em;
+      min-height: 1em;
+      line-height: 1em;
+      padding: 0.2em;
+      color: $primary-cta-light;
       background-color: #bf1f1f;
-      font-size: 10px;
-      border-radius: 20px;
+      font-size: 0.8em;
+      border-radius: 50%;
       content: attr(data-badge);
       border: solid 1px #c93a3a;
     }

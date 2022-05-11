@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <main-header />
-    <p class="message"> {{ message }} </p>
+    <main-header :links="links"/>
+    <p class="message">{{ message }}</p>
     <div class="form">
       <p class="input-label">Enter e-mail address:</p>
       <input
@@ -57,7 +57,25 @@ export default {
         password: "",
       },
       token: "",
-      message: ""
+      message: "",
+      links: [
+        {
+          name: "Home",
+          url: "/",
+        },
+        {
+          name: "Password Guide",
+          url: "/password-guide",
+        },
+        {
+          name: "Log in",
+          url: "/login",
+        },
+        {
+          name: "Register",
+          url: "/register",
+        },
+      ],
     };
   },
 

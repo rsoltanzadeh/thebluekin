@@ -46,6 +46,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "lobby" */ '../views/Lobby.vue')
     },
     {
+        path: '/logout',
+        name: 'FrontPage',
+        component: FrontPage
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import(/* webpackChunkName: "not-found" */ '../views/NotFound.vue')
@@ -58,6 +63,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+    if(to.path == "/logout") {
+        fetch("/api/logout");
+    }
     const loggedIn = await store.dispatch('checkAuthentication');
     if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
         next({ name: 'Login' });

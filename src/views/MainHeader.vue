@@ -4,42 +4,38 @@
     <router-link class="logo" to="/">
       <h1>The Bluekin</h1>
     </router-link>
-    <div class="nav-wrapper">
-      <router-link class="nav-item" to="/">
-        <p>Home</p>
-      </router-link>
-      <router-link class="nav-item" to="/password-guide">
-        <p>Password Guide</p>
-      </router-link>
-      <router-link class="nav-item" to="/login">
-        <p>Log in</p>
-      </router-link>
-      <router-link class="nav-item" to="/register">
-        <p>Register</p>
+    <div class="nav">
+      <router-link
+        v-for="(link, index) in links"
+        :key="index"
+        :to="{path: link.url}"
+        class="nav-item"
+      >
+        <p>{{ link.name }}</p>
       </router-link>
     </div>
     <div :class="{ visible: showNav }" class="secondary-nav-wrapper">
-      <router-link class="nav-item" to="/">
-        <p>Home</p>
-      </router-link>
-      <router-link class="nav-item" to="/password-guide">
-        <p>Password Guide</p>
-      </router-link>
-      <router-link class="nav-item" to="/login">
-        <p>Log in</p>
-      </router-link>
-      <router-link class="nav-item" to="/register">
-        <p>Register</p>
-      </router-link>
+      <div class="secondary-nav">
+        <router-link
+          v-for="(link, index) in links"
+          :key="index"
+          :to="{ path: link.url }"
+          class="nav-item"
+        >
+          <p>{{ link.name }}</p>
+        </router-link>
+      </div>
+      <button @click="toggleNav" :class="{ moved: showNav }" class="nav-icon">
+        ➤
+      </button>
     </div>
-    <button @click="toggleNav" :class="{ moved: showNav }" class="nav-icon">
-      ☝
-    </button>
   </div>
 </template>
 
 <script>
 export default {
+  props: ["links"],
+
   data() {
     return {
       showNav: false,
@@ -77,7 +73,6 @@ div.main-header {
     position: fixed;
     top: 0;
     left: 0;
-    opacity: 0;
   }
 
   a {
@@ -97,72 +92,64 @@ div.main-header {
     text-decoration: none;
   }
 
-  .burger {
-    display: none;
-    cursor: pointer;
-    font-size: 2rem;
-    color: $primary-cta-light;
-    background: none;
-    border: none;
-    transition: all 0.3s ease-out;
-
-    &.rotated {
-      transform: rotate(90deg);
-    }
-  }
-
-  .nav-icon {
-    display: none;
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    color: $primary-cta-light;
-    font-size: 3em;
-    cursor: pointer;
-    background: none;
-    border: none;
-    transition: all 0.6s ease-out;
-
-    &.moved {
-      transform: translateY(calc(-100vh + 4rem + 100%)) rotate(180deg);
-      color: $primary-dark;
-    }
-  }
-
   div.secondary-nav-wrapper {
-    width: 100vw;
-    display: none;
     bottom: 0px;
     left: 0px;
     position: fixed;
+    display: none;
+    align-items: center;
+    transform: translateX(-50vw);
+    transition: all 0.4s ease-out;
     z-index: 2;
-    background-color: black;
-    opacity: 0.8;
-    flex-direction: column;
-    transform: translateY(100%);
-    transition: all 0.3s ease-out;
 
     &.visible {
-      transform: translateY(0);
+      transform: translateX(0);
     }
 
-    .nav-item {
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      color: $primary-cta-light;
-      text-decoration: none;
-      transition: all 0.4s;
+    div.secondary-nav {
+      width: 50vw;
+      background-color: black;
+      opacity: 0.8;
+      flex-direction: column;
 
-      &:hover {
-        background-color: $primary-cta-light;
+      .nav-item {
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: $primary-cta-light;
+        text-decoration: none;
+        transition: all 0.4s;
+
+        &:hover {
+          background-color: $primary-cta-light;
+          color: $primary-dark;
+        }
+      }
+    }
+
+    .nav-icon {
+      display: block;
+      z-index: 2;
+      margin-left: 1rem;
+      color: $primary-cta-light;
+      font-size: 2em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: all 0.4s ease-in-out;
+      -webkit-text-stroke: 2px $primary-cta-light;
+
+      &.moved {
+        align-self: stretch;
+        transform: rotate(180deg);
         color: $primary-dark;
+        -webkit-text-stroke-color: $primary-cta-light;
       }
     }
   }
 
-  div.nav-wrapper {
+  div.nav {
     display: flex;
     grid-column: 2 / 3;
 
@@ -195,16 +182,14 @@ div.main-header {
       margin: 0;
     }
 
-    div.nav-wrapper {
+    div.nav {
       display: none;
     }
 
     div.secondary-nav-wrapper {
       display: flex;
     }
-    .burger {
-      display: none;
-    }
+
     .nav-icon {
       display: block;
     }

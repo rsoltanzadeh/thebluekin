@@ -60,7 +60,7 @@ div.wrapper {
   color: $primary-cta-light;
   margin: 5vh auto;
   text-align: center;
-  width: min(90vw, 60rem);
+  width: min(80vw, 60rem);
 }
 
 h1 {

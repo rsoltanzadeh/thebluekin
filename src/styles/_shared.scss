@@ -21,10 +21,12 @@ $secondary-light: #EEE3AB;
 $secondary-cta-light: #BBCDE5;
 $secondary-cta-medium: #639FAB;
 
-$layout-breakpoint: 1300px;
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
 }

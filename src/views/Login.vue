@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <main-header />
+    <main-header :links="links" />
     <p class="message"> {{ message }} </p>
     <div class="form">
       <p class="input-label">Username:</p>
@@ -51,7 +51,25 @@ export default {
         password: "",
       },
       token: "",
-      message: ""
+      message: "",
+      links: [
+        {
+          "name": "Home",
+          "url": "/"
+        },
+        {
+          "name": "Password Guide",
+          "url": "/password-guide"
+        },
+        {
+          "name": "Log in",
+          "url": "/login"
+        },
+        {
+          "name": "Register",
+          "url": "/register"
+        }
+      ]
     };
   },
 
